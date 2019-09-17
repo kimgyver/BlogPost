@@ -2,9 +2,10 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -36,4 +37,24 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function blogPosts()
+    {
+        return $this->hasMany('App\BlogPost');
+    }
+
+    public function scopeMostBlogPosts(Builder $builder)
+    {
+        // blog_posts_count
+        return $builder->withCount('blogPosts')->orderBy('blog_posts_count', 'desc');
+    }
+
+    public function scopeMostBlogPostsLastMonth(Builder $builder)
+    {
+        return $builder->withCount(['blogPosts' => function(Builder $builder) {
+            $builder->whereBetween(static::CREATED_AT, [now()->subMonths(1), now()]);
+        }])
+        ->having('blog_posts_count', '>=', 2)
+        ->orderBy('blog_posts_count', 'desc');
+    }
 }

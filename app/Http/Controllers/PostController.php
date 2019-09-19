@@ -8,6 +8,7 @@ use App\Http\Requests\StorePost;
 // use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use App\User;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
@@ -34,13 +35,25 @@ class PostController extends Controller
         // }
         // dd(DB::getQueryLog());
 
+        $mostCommented = Cache::remember('mostCommented', now()->addSeconds(10), function() {
+            return BlogPost::mostCommented()->take(5)->get();
+        });
+
+        $mostActive = Cache::remember('mostActive', now()->addSeconds(10), function() {
+            return User::mostBlogPosts()->take(5)->get();
+        });
+
+        $mostActiveLastMonth = Cache::remember('mostActiveLastMonth', now()->addSeconds(10), function() {
+            return User::mostBlogPostsLastMonth()->take(5)->get();
+        });
+
         // comments_count
         return view('posts.index', 
                 [
-                    'posts' => BlogPost::latest()->withCount('comments')->get(),
-                    'mostCommentedPosts' => BlogPost::mostCommented()->take(5)->get(),
-                    'mostActive' => User::mostBlogPosts()->take(5)->get(),
-                    'mostActiveLastMonth' => User::mostBlogPostsLastMonth()->take(5)->get(),
+                    'posts' => BlogPost::latest()->withCount('comments')->with('user')->get(),
+                    'mostCommentedPosts' => $mostCommented,
+                    'mostActive' => $mostActive,
+                    'mostActiveLastMonth' => $mostActiveLastMonth,
                 ]);
     }
 
@@ -59,7 +72,13 @@ class PostController extends Controller
         //     return $builder->latest();
         // }])->findOrFail($id)]);
 
-        return view('posts.show', ['post' => BlogPost::with('comments')->findOrFail($id)]);
+        $counter = 0;
+
+        return view('posts.show', 
+            [
+                'post' => BlogPost::with('comments')->findOrFail($id),
+                'counter' => $counter,
+            ]);
     }
 
     public function create()

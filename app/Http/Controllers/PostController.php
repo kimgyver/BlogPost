@@ -50,7 +50,7 @@ class PostController extends Controller
         // comments_count
         return view('posts.index', 
                 [
-                    'posts' => BlogPost::latest()->withCount('comments')->with('user')->get(),
+                    'posts' => BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get(),
                     'mostCommentedPosts' => $mostCommented,
                     'mostActive' => $mostActive,
                     'mostActiveLastMonth' => $mostActiveLastMonth,
@@ -76,7 +76,7 @@ class PostController extends Controller
 
         return view('posts.show', 
             [
-                'post' => BlogPost::with('comments')->findOrFail($id),
+                'post' => BlogPost::with('comments')->with('tags')->with('user')->findOrFail($id),
                 'counter' => $counter,
             ]);
     }

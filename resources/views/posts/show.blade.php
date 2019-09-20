@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+<div class="row">
+    <div class="col-8"> 
     <h1>
         {{ $post->title }}
 
@@ -30,4 +32,8 @@
     @empty
         <p>No comments yet!</p>
     @endforelse
+    </div>
+    <div class="col-4">
+        @include('posts._activity')
+    </div>
 @endsection('content')

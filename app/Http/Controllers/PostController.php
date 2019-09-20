@@ -35,25 +35,10 @@ class PostController extends Controller
         // }
         // dd(DB::getQueryLog());
 
-        $mostCommented = Cache::remember('mostCommented', now()->addSeconds(10), function() {
-            return BlogPost::mostCommented()->take(5)->get();
-        });
-
-        $mostActive = Cache::remember('mostActive', now()->addSeconds(10), function() {
-            return User::mostBlogPosts()->take(5)->get();
-        });
-
-        $mostActiveLastMonth = Cache::remember('mostActiveLastMonth', now()->addSeconds(10), function() {
-            return User::mostBlogPostsLastMonth()->take(5)->get();
-        });
-
         // comments_count
         return view('posts.index', 
                 [
                     'posts' => BlogPost::latest()->withCount('comments')->with('user')->with('tags')->get(),
-                    'mostCommentedPosts' => $mostCommented,
-                    'mostActive' => $mostActive,
-                    'mostActiveLastMonth' => $mostActiveLastMonth,
                 ]);
     }
 

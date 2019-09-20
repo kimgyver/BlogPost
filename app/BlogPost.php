@@ -26,6 +26,10 @@ class BlogPost extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function tags() {
+        return $this->belongsToMany('App\Tag');
+    }
+
     public function scopeLatest(Builder $builder)
     {
         return $builder->orderBy(static::CREATED_AT, 'desc');

@@ -27,12 +27,17 @@ class DatabaseSeeder extends Seeder
             $comment->blog_post_id = $posts->random()->id;
             $comment->save();
         });
-        }
-
 
         $this->call([
             TagsTableSeeder::class,
             BlogPostTagTableSeeder::class,
         ]);
+        }
+
+        $posts = App\BlogPost::all();
+        $comments = App\Comment::all()->each(function($comment) use($posts, $users) {
+            $comment->user_id = $users->random()->id;
+            $comment->save();
+        });
     }
 }

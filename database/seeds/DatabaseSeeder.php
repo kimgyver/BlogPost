@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $else = factory(App\User::class, 20)->create();
         $users = $else->concat([$jinyoung]);
 
+        if (App\BlogPost::all()->count() == 0)
+        {
         $posts = factory(App\BlogPost::class, 50)->make()->each(function($post) use($users) {
             $post->user_id = $users->random()->id;
             $post->save();
@@ -25,5 +27,12 @@ class DatabaseSeeder extends Seeder
             $comment->blog_post_id = $posts->random()->id;
             $comment->save();
         });
+        }
+
+
+        $this->call([
+            TagsTableSeeder::class,
+            BlogPostTagTableSeeder::class,
+        ]);
     }
 }

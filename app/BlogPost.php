@@ -41,6 +41,11 @@ class BlogPost extends Model
         return $builder->withCount('comments')->orderBy('comments_count', 'desc');
     }
 
+    public function scopeLatestWithRelations(Builder $builder)
+    {
+        return $builder->latest()->withCount('comments')->with('user')->with('tags');
+    }
+
     public static function boot()
     {
         static::addGlobalScope(new DeletedAdminScope);  // due to "use SoftDeletes", it should be here. 

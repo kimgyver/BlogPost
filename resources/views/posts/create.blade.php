@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <form method="post" action="{{ route('posts.store')}}">
+    <form method="post" action="{{ route('posts.store')}}" enctype="multipart/form-data">
         @csrf
         
         @include('posts._form')

@@ -61,7 +61,7 @@ class PostController extends Controller
 
         return view('posts.show', 
             [
-                'post' => BlogPost::with('comments')->with('tags')->with('user')->findOrFail($id),
+                'post' => BlogPost::with('comments', 'tags', 'user', 'comments.user')->findOrFail($id),
                 'counter' => $counter,
             ]);
     }

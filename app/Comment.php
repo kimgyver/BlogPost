@@ -12,11 +12,9 @@ class Comment extends Model
     
     protected $fillable = ['user_id', 'content'];
 
-    // blog_post_id
-    function blogPost()
+    public function commentable()
     {
-        // return $this->belongsTo('App\BlogPost', 'post_id', 'blog_post_id');
-        return $this->belongsTo('App\BlogPost');
+        return $this->morphTo();
     }
 
     public function user()

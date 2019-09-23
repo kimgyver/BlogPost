@@ -32,7 +32,7 @@ class BlogPost extends Model
 
     public function image()
     {
-        return $this->hasOne('App\Image');
+        return $this->morphOne('App\Image', 'imageable');
     }
 
     public function scopeLatest(Builder $builder)
@@ -60,7 +60,6 @@ class BlogPost extends Model
 
         static::deleting(function (BlogPost $blogPost) {
             $blogPost->comments()->delete();
-            $blogPost->image()->delete();
         });
 
         static::restoring(function (BlogPost $blogPost) {

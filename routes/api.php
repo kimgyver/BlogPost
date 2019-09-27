@@ -16,3 +16,18 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+// api/v1/status
+// api/v1/posts/200/comments
+Route::prefix('v1')->name('api.v1.')->namespace('Api\V1')->group(function () {
+    Route::get('/status', function () {
+        return response()->json(['status' => 'OK']);
+    })->name('status');
+    Route::apiResource('posts.comments', 'PostCommentController');
+});
+
+Route::prefix('v2')->name('api.v2.')->group(function () {
+    Route::get('/status', function () {
+        return response()->json(['status' => true]);
+    })->name('status');
+});

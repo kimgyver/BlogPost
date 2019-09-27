@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use App\Http\ViewComposers\ActivityComposer;
 use Illuminate\Support\Facades\Schema;
+use App\Http\Resources\Comment as CommentResource;
+use Illuminate\Http\Resources\Json\Resource;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -38,5 +40,8 @@ class AppServiceProvider extends ServiceProvider
 
         // view()->composer('*', ActivityComposer::class);
         view()->composer(['posts.index', 'posts.show'], ActivityComposer::class);
+
+        // CommentResource::withoutWrapping();
+        Resource::withoutWrapping();
     }
 }
